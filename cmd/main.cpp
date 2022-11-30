@@ -1,4 +1,5 @@
 #include "gui/data-structure-viewer.hpp"
+#include "gui/request-form.hpp"
 
 #include <QApplication>
 
@@ -7,7 +8,11 @@ int main(int argc, char **argv) {
     auto segtree = lib::MakeSegmentTree(&array[0], sizeof(array) / sizeof(array[0]));
 
     const auto app = QApplication(argc, argv);
-    auto widget = DataStructureViewer(nullptr, segtree.get());
-    widget.show();
+    auto widget1 = DataStructureViewer(nullptr, segtree.get());
+    auto widget2 = Requester(nullptr, segtree.get());
+    QObject::connect(&widget2, &Requester::requestExecuted, &widget1, &DataStructureViewer::onRequestExecuted);
+
+    widget1.show();
+    widget2.show();
     return app.exec();
 }
