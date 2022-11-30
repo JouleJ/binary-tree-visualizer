@@ -34,6 +34,9 @@ public:
     QSize minimumSizeHint() const override;
     QSize sizeHint() const override;
 
+public slots:
+    void onRequestExecuted();
+
 protected:
     void paintEvent(QPaintEvent* event) override;
 };

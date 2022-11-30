@@ -105,3 +105,8 @@ void DataStructureViewer::paintEvent(QPaintEvent* event) {
         }
     }
 }
+
+void DataStructureViewer::onRequestExecuted() {
+    update();
+    resize(minimumSizeHint());
+}
