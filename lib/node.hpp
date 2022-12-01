@@ -6,12 +6,12 @@
 
 namespace lib {
 class Node {
-public:
-  virtual ~Node() = default;
+  public:
+    virtual ~Node() = default;
 
-  virtual QString getContent() const = 0;
-  virtual const Node *getLeftChild() const = 0;
-  virtual const Node *getRightChild() const = 0;
+    virtual QString getContent() const = 0;
+    virtual const Node *getLeftChild() const = 0;
+    virtual const Node *getRightChild() const = 0;
 };
 
 std::unique_ptr<Node> MakeNode(QString content, std::unique_ptr<Node> left,

@@ -7,37 +7,37 @@
 #include <vector>
 
 class DataStructureViewer : public QWidget {
-  Q_OBJECT
+    Q_OBJECT
 
-private:
-  const lib::DataStructure *dataStructure;
+  private:
+    const lib::DataStructure *dataStructure;
 
-  void refreshNodes();
-  void recurseTree(const lib::Node *node, size_t row_id);
+    void refreshNodes();
+    void recurseTree(const lib::Node *node, size_t row_id);
 
-  struct Node {
-    qreal x, y;
+    struct Node {
+        qreal x, y;
+        qreal width, height;
+        QString text;
+    };
+
+    struct Row {
+        std::vector<Node> nodes;
+    };
+
+    std::vector<Row> rows;
     qreal width, height;
-    QString text;
-  };
 
-  struct Row {
-    std::vector<Node> nodes;
-  };
+  public:
+    explicit DataStructureViewer(QWidget *parent,
+                                 const lib::DataStructure *_dataStructure);
 
-  std::vector<Row> rows;
-  qreal width, height;
+    QSize minimumSizeHint() const override;
+    QSize sizeHint() const override;
 
-public:
-  explicit DataStructureViewer(QWidget *parent,
-                               const lib::DataStructure *_dataStructure);
+  public slots:
+    void onRequestExecuted();
 
-  QSize minimumSizeHint() const override;
-  QSize sizeHint() const override;
-
-public slots:
-  void onRequestExecuted();
-
-protected:
-  void paintEvent(QPaintEvent *event) override;
+  protected:
+    void paintEvent(QPaintEvent *event) override;
 };
