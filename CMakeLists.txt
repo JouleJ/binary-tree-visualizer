@@ -13,7 +13,7 @@ find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 add_library(lib lib/node.cpp lib/segtree.cpp lib/request.cpp)
-target_link_libraries(lib PUBLIC Qt::Core)
+target_link_libraries(lib PUBLIC Qt::Core Qt::Gui)
 
 add_executable(binary-tree-visualizer cmd/main.cpp gui/data-structure-viewer.cpp gui/request-form.cpp)
 target_link_libraries(binary-tree-visualizer PUBLIC Qt::Core Qt::Gui Qt::Widgets lib)

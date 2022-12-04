@@ -196,8 +196,8 @@ class SegmentTree : public DataStructure {
                       req_right_bound);
     }
 
-    std::unique_ptr<Node> visualize(size_t vertex_id, size_t left_bound,
-                                    size_t right_bound) const {
+    std::unique_ptr<INode> visualize(size_t vertex_id, size_t left_bound,
+                                     size_t right_bound) const {
         QString content = QString::number(vertices[vertex_id]);
 
         if (left_bound == right_bound) {
@@ -225,7 +225,7 @@ class SegmentTree : public DataStructure {
         build(0, 0, count - 1, first);
     }
 
-    std::unique_ptr<Node> getRoot() const override {
+    std::unique_ptr<INode> getRoot() const override {
         return visualize(0, 0, count - 1);
     }
 

@@ -1,5 +1,6 @@
 #include "lib/node.hpp"
 
+#include <QtGui/QBrush>
 #include <cassert>
 
 int main() {
@@ -12,6 +13,7 @@ int main() {
     assert(root->getLeftChild()->getLeftChild()->getContent() == "D");
     assert(root->getLeftChild()->getRightChild()->getContent() == "E");
     assert(root->getRightChild()->getContent() == "B");
+    assert(root->getBrush() == QBrush(Qt::yellow));
 
     return 0;
 }

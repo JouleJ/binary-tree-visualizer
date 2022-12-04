@@ -1,20 +1,23 @@
 #pragma once
 
 #include <QString>
+#include <QtGui/QBrush>
 
 #include <memory>
 
 namespace lib {
-class Node {
+class INode {
   public:
-    virtual ~Node() = default;
+    virtual ~INode() = default;
 
     virtual QString getContent() const = 0;
-    virtual const Node *getLeftChild() const = 0;
-    virtual const Node *getRightChild() const = 0;
+    virtual const INode *getLeftChild() const = 0;
+    virtual const INode *getRightChild() const = 0;
+
+    virtual QBrush getBrush() const = 0;
 };
 
-std::unique_ptr<Node> MakeNode(QString content, std::unique_ptr<Node> left,
-                               std::unique_ptr<Node> right);
-std::unique_ptr<Node> MakeLeaf(QString content);
+std::unique_ptr<INode> MakeNode(QString content, std::unique_ptr<INode> left,
+                                std::unique_ptr<INode> right);
+std::unique_ptr<INode> MakeLeaf(QString content);
 } // namespace lib

@@ -10,7 +10,7 @@ class DataStructure {
   public:
     virtual ~DataStructure() = default;
 
-    virtual std::unique_ptr<Node> getRoot() const = 0;
+    virtual std::unique_ptr<INode> getRoot() const = 0;
 
     virtual size_t getRequestSchemeCount() const = 0;
     virtual const RequestScheme *getRequestScheme(size_t idx) const = 0;
