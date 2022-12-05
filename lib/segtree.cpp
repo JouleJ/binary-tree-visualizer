@@ -1,5 +1,6 @@
 #include "data-structure.hpp"
 
+#include <any>
 #include <cassert>
 #include <stdexcept>
 #include <vector>
@@ -201,7 +202,8 @@ class SegmentTree : public DataStructure {
         QString content = QString::number(vertices[vertex_id]);
 
         if (left_bound == right_bound) {
-            return MakeLeaf(std::move(content));
+            return MakeLeaf(std::move(content),
+                            std::make_any<size_t>(left_bound));
         }
 
         const size_t mid = getMid(left_bound, right_bound);

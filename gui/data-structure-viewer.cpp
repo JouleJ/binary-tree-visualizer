@@ -51,6 +51,9 @@ qreal DataStructureViewer::recurseTree(const lib::INode *node, size_t row_id) {
     out_node.width = getNodeWidth();
     out_node.brush = node->getBrush();
     out_node.y = getRowHeight(row_id);
+    out_node.meta = node->getMeta();
+    out_node.textColor = node->getTextColor();
+    out_node.metaColor = node->getMetaColor();
 
     auto xl = recurseTree(node->getLeftChild(), row_id + 1);
     auto xr = recurseTree(node->getRightChild(), row_id + 1);
@@ -102,11 +105,7 @@ void DataStructureViewer::paintEvent(QPaintEvent *event) {
 
     for (const auto &row : rows) {
         for (const auto &node : row.nodes) {
-            const auto rect = QRectF(node.x, node.y, node.width, node.height);
-            painter.setBrush(node.brush);
-            painter.drawEllipse(rect);
-            painter.setBrush(Qt::black);
-            painter.drawText(rect, Qt::AlignCenter, node.text);
+            node.paintNode(painter);
         }
     }
 }

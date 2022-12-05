@@ -2,8 +2,11 @@
 
 #include "lib/data-structure.hpp"
 
+#include <QPainter>
 #include <QWidget>
 
+#include <any>
+#include <iostream>
 #include <vector>
 
 class DataStructureViewer : public QWidget {
@@ -22,8 +25,40 @@ class DataStructureViewer : public QWidget {
         qreal width, height;
         QString text;
         QBrush brush;
+        std::any meta;
+        QColor textColor;
+        QColor metaColor;
 
         QPointF getCenter() { return QPointF(x + width / 2, y + height / 2); }
+
+        void paintNodeBody(QPainter &p, const QRectF &border) const {
+            p.setPen(Qt::black);
+            p.setBrush(brush);
+            p.drawEllipse(border);
+        }
+
+        // TODO - Calculate font size based on window size
+        void paintNodeText(QPainter &p, const QRectF &border) const {
+            p.setPen(textColor);
+            p.setFont(QFont("Arial", 18, QFont::DemiBold));
+            p.drawText(border, Qt::AlignCenter, text);
+        }
+
+        void paintNodeMeta(QPainter &p, const QRectF &border) const {
+            if (meta.type().name() == typeid(size_t).name()) {
+                p.setPen(metaColor);
+                p.setFont(QFont("Arial", 12, QFont::Normal));
+                p.drawText(border, Qt::AlignBottom,
+                           QString::number(std::any_cast<size_t>(meta)));
+            }
+        }
+
+        void paintNode(QPainter &p) const {
+            const auto rect = QRectF(x, y, width, height);
+            paintNodeBody(p, rect);
+            paintNodeText(p, rect);
+            paintNodeMeta(p, rect);
+        }
     };
 
     struct Row {
