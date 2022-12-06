@@ -12,7 +12,7 @@ find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
-add_library(lib lib/node.cpp lib/segtree.cpp lib/request.cpp)
+add_library(lib lib/node.cpp lib/segtree.cpp lib/request.cpp lib/casual-tree.cpp)
 target_link_libraries(lib PUBLIC Qt::Core Qt::Gui)
 
 add_executable(binary-tree-visualizer cmd/main.cpp gui/data-structure-viewer.cpp gui/request-form.cpp)
@@ -24,5 +24,9 @@ target_link_libraries(test-node PUBLIC Qt::Core lib)
 add_executable(test-segtree test/segtree.cpp)
 target_link_libraries(test-segtree PUBLIC Qt::Core lib)
 
+add_executable(test-casual test/casual-tree.cpp)
+target_link_libraries(test-casual PUBLIC Qt::Core lib)
+
 add_test(NAME TestNode COMMAND ./test-node)
 add_test(NAME TestSegmentTree COMMAND ./test-segtree)
+add_test(NAME TestCasualTree COMMAND ./test-casual)

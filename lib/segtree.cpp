@@ -227,9 +227,7 @@ class SegmentTree : public DataStructure {
         build(0, 0, count - 1, first);
     }
 
-    std::unique_ptr<INode> getRoot() const override {
-        return visualize(0, 0, count - 1);
-    }
+    INode *getRoot() const override { return visualize(0, 0, count - 1).get(); }
 
     size_t getRequestSchemeCount() const override { return 2; }
 

@@ -30,7 +30,7 @@ void DataStructureViewer::refreshNodes() {
     currentLeafX = getHorGap();
 
     const auto root = dataStructure->getRoot();
-    recurseTree(root.get(), 0);
+    recurseTree(root, 0);
 
     width = currentLeafX;
     height = getRowHeight(rows.size());
