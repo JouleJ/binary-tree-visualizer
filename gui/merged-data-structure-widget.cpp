@@ -51,7 +51,7 @@ void MergedDataStructureWidget::onAnimationStep() {
         const auto width =
             viewerSize.width() + requesterSize.width() + getGap();
         const auto height =
-            std::max(viewerSize.height(), requesterSize.height());
+            std::max(viewerSize.height(), requesterSize.height()) + getGap();
         update();
         resize(QSize(width, height));
         update();

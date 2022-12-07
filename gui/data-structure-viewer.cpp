@@ -37,7 +37,7 @@ void DataStructureViewer::refreshNodes() {
     const auto root = dataStructure->getRoot(animationStep);
     recurseTree(root, 0);
 
-    height = getRowHeight(rows.size());
+    height = getRowHeight(rows.size()) + getVertGap();
 }
 
 qreal DataStructureViewer::recurseTree(const lib::INode *node, size_t row_id) {
@@ -71,7 +71,7 @@ qreal DataStructureViewer::recurseTree(const lib::INode *node, size_t row_id) {
         curX = (xl + xr) / non_zero_cnt;
     }
     out_node.x = curX;
-    width = std::max<qreal>(width, out_node.x + out_node.width);
+    width = std::max<qreal>(width, out_node.x + out_node.width + getHorGap());
 
     // this will break if node.width and node.height
     // is different for nodes in the same tree
@@ -116,7 +116,7 @@ void DataStructureViewer::paintEvent(QPaintEvent *event) {
     }
 }
 
-size_t DataStructureViewer::getAnimationDelayMsec() const { return 2500; }
+size_t DataStructureViewer::getAnimationDelayMsec() const { return 1000; }
 
 void DataStructureViewer::onAnimationStep() {
     refreshNodes();

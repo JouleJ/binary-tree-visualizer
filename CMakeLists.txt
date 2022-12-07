@@ -12,7 +12,7 @@ find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
-add_library(lib lib/node.cpp lib/segtree.cpp lib/request.cpp lib/casual-tree.cpp)
+add_library(lib lib/node.cpp lib/segtree.cpp lib/request.cpp lib/casual-tree.cpp lib/common.hpp)
 target_link_libraries(lib PUBLIC Qt::Core Qt::Gui)
 
 add_executable(binary-tree-visualizer cmd/main.cpp gui/data-structure-viewer.cpp gui/request-form.cpp gui/merged-data-structure-widget.cpp)
