@@ -27,9 +27,7 @@ class NodeImpl : public INode {
 
     QBrush getBrush() const override { return brush; }
 
-    void setBrush(QBrush newBrush) {
-      brush = newBrush;
-    }
+    void setBrush(QBrush newBrush) { brush = newBrush; }
 
     std::any getMeta() const override { return meta; }
 };
@@ -51,16 +49,15 @@ class LeafImpl : public INode {
 
     QBrush getBrush() const override { return brush; }
 
-    void setBrush(QBrush newBrush) {
-      brush = newBrush;
-    }
+    void setBrush(QBrush newBrush) { brush = newBrush; }
 
     std::any getMeta() const override { return meta; }
 };
 } // namespace
 
 std::unique_ptr<INode> MakeNode(QString content, std::unique_ptr<INode> left,
-                                std::unique_ptr<INode> right, std::any meta, QBrush brush) {
+                                std::unique_ptr<INode> right, std::any meta,
+                                QBrush brush) {
     return std::make_unique<NodeImpl>(std::move(content), std::move(left),
                                       std::move(right), meta, brush);
 }

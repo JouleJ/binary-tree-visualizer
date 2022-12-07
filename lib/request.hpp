@@ -28,21 +28,17 @@ class RequestScheme {
 
 class AnimationDelayRequestScheme : public RequestScheme {
     class AnimationDelayArgumentScheme : public lib::ArgumentScheme {
-    public:
+      public:
         explicit AnimationDelayArgumentScheme() = default;
 
-        QString getName() const override {
-            return "Задержка (мс)";
-        }
+        QString getName() const override { return "Задержка (мс)"; }
 
-        bool validateValue(int64_t value) const override {
-        return value > 0;
-        }
+        bool validateValue(int64_t value) const override { return value > 0; }
     };
 
     AnimationDelayArgumentScheme arg;
 
-public:
+  public:
     explicit AnimationDelayRequestScheme() = default;
 
     QString getName() const override { return "Задержка анимации"; }

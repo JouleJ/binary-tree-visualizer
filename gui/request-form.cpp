@@ -59,8 +59,7 @@ void RequestForm::onAdjacentButtonClicked() {
 }
 
 Requester::Requester(QWidget *parent, lib::DataStructure *_dataStructure)
-    : QFrame(parent)
-    , dataStructure(_dataStructure) {
+    : QFrame(parent), dataStructure(_dataStructure) {
     setFrameShape(QFrame::Box);
     formLayout = new QFormLayout;
 

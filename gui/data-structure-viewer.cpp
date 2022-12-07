@@ -118,7 +118,9 @@ void DataStructureViewer::paintEvent(QPaintEvent *event) {
     }
 }
 
-size_t DataStructureViewer::getAnimationDelayMsec() const { return dataStructure->getAnimationDelay(); }
+size_t DataStructureViewer::getAnimationDelayMsec() const {
+    return dataStructure->getAnimationDelay();
+}
 
 void DataStructureViewer::onAnimationStep() {
     refreshNodes();
