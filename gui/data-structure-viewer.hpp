@@ -68,11 +68,13 @@ class DataStructureViewer : public QWidget {
     qreal currentLeafX;
     std::vector<Row> rows;
     std::vector<QLineF> edges;
-    qreal width, height;
+    qreal width_, height_;
 
     size_t animationStep = 0;
 
     size_t getAnimationDelayMsec() const;
+
+    qreal getSizeUnit() const;
 
   public:
     explicit DataStructureViewer(QWidget *parent,

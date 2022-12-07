@@ -28,16 +28,18 @@ DataStructureViewer::DataStructureViewer(
 }
 
 void DataStructureViewer::refreshNodes() {
-    rows.clear();
-    edges.clear();
-    width = 0.;
-    height = 0.;
-    currentLeafX = getHorGap();
+    if (dataStructure->getAnimationStepCount() != 0) {
+        rows.clear();
+        edges.clear();
+        width_ = 0.;
+        height_ = 0.;
+        currentLeafX = getHorGap();
 
-    const auto root = dataStructure->getRoot(animationStep);
-    recurseTree(root, 0);
+        const auto root = dataStructure->getRoot(animationStep);
+        recurseTree(root, 0);
 
-    height = getRowHeight(rows.size()) + getVertGap();
+        height_ = getRowHeight(rows.size()) + getVertGap();
+    }
 }
 
 qreal DataStructureViewer::recurseTree(const lib::INode *node, size_t row_id) {
@@ -71,7 +73,7 @@ qreal DataStructureViewer::recurseTree(const lib::INode *node, size_t row_id) {
         curX = (xl + xr) / non_zero_cnt;
     }
     out_node.x = curX;
-    width = std::max<qreal>(width, out_node.x + out_node.width + getHorGap());
+    width_ = std::max<qreal>(width_, out_node.x + out_node.width + getHorGap());
 
     // this will break if node.width and node.height
     // is different for nodes in the same tree
@@ -94,7 +96,7 @@ qreal DataStructureViewer::recurseTree(const lib::INode *node, size_t row_id) {
 }
 
 QSize DataStructureViewer::minimumSizeHint() const {
-    return QSize(static_cast<int>(width + 1.), static_cast<int>(height + 1.));
+    return QSize(static_cast<int>(width_ + 1.), static_cast<int>(height_ + 1.));
 }
 
 QSize DataStructureViewer::sizeHint() const { return minimumSizeHint(); }
@@ -104,7 +106,7 @@ void DataStructureViewer::paintEvent(QPaintEvent *event) {
 
     refreshNodes();
     QPainter painter(this);
-    painter.drawRect(QRectF(0., 0., width, height));
+    painter.drawRect(QRectF(0., 0., width_, height_));
     for (const auto &edge : edges) {
         painter.drawLine(edge);
     }
@@ -116,7 +118,7 @@ void DataStructureViewer::paintEvent(QPaintEvent *event) {
     }
 }
 
-size_t DataStructureViewer::getAnimationDelayMsec() const { return 1000; }
+size_t DataStructureViewer::getAnimationDelayMsec() const { return dataStructure->getAnimationDelay(); }
 
 void DataStructureViewer::onAnimationStep() {
     refreshNodes();

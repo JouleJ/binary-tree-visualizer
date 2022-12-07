@@ -132,8 +132,11 @@ class SegmentTree : public DataStructure {
 
     UpdateRequestScheme updateRequestScheme;
     GetSumRequestScheme getSumRequestScheme;
+    AnimationDelayRequestScheme animationDelayRequestScheme;
 
     std::vector<std::unique_ptr<INode>> animatedRoot;
+
+    size_t animationDelay;
 
     std::unique_ptr<INode> visualizeImpl(size_t vertex_id, size_t left_bound,
                                      size_t right_bound, size_t visualized_from = -1) const {
@@ -246,8 +249,9 @@ class SegmentTree : public DataStructure {
   public:
     SegmentTree(const int64_t *first, size_t _count)
         : count(_count), updateRequestScheme(_count),
-          getSumRequestScheme(_count) {
+          getSumRequestScheme(_count), animationDelayRequestScheme() {
 
+        animationDelay = 1000;
         if (count == 0) {
             throw std::runtime_error(
                 "SegmentTree: count must be greater than zero");
@@ -255,6 +259,10 @@ class SegmentTree : public DataStructure {
 
         build(0, 0, count - 1, first);
         visualize();
+    }
+
+    size_t getAnimationDelay() const override {
+        return animationDelay;
     }
 
     size_t getAnimationStepCount() const override {
@@ -265,7 +273,7 @@ class SegmentTree : public DataStructure {
         return animatedRoot.at(animationStep).get();
     }
 
-    size_t getRequestSchemeCount() const override { return 2; }
+    size_t getRequestSchemeCount() const override { return 3; }
 
     const RequestScheme *getRequestScheme(size_t idx) const override {
         switch (idx) {
@@ -273,6 +281,8 @@ class SegmentTree : public DataStructure {
             return &updateRequestScheme;
         case 1:
             return &getSumRequestScheme;
+        case 2:
+            return &animationDelayRequestScheme;
         default:
             throw std::runtime_error("SegmentTree::getRequestScheme: idx > 1");
         }
@@ -280,10 +290,10 @@ class SegmentTree : public DataStructure {
 
     int64_t executeRequest(const RequestScheme *requestScheme,
                            const int64_t *firstValue) override {
+        animatedRoot.clear();
         if (requestScheme == &updateRequestScheme) {
             const size_t position = static_cast<size_t>(firstValue[0]);
             const int64_t newValue = firstValue[1];
-            animatedRoot.clear();
             update(0, 0, count - 1, position, newValue);
             visualize();
             return 0;
@@ -292,10 +302,14 @@ class SegmentTree : public DataStructure {
         if (requestScheme == &getSumRequestScheme) {
             const size_t leftBound = static_cast<size_t>(firstValue[0]);
             const size_t rightBound = static_cast<size_t>(firstValue[1]);
-            animatedRoot.clear();
             auto res = getSum(0, 0, count - 1, leftBound, rightBound);
             visualize();
             return res;
+        }
+
+        if (requestScheme == &animationDelayRequestScheme) {
+            animationDelay = static_cast<size_t>(firstValue[0]);
+            return 0;
         }
 
         throw std::runtime_error(

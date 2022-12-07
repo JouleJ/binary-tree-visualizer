@@ -7,7 +7,7 @@
 
 namespace lib {
 class DataStructure {
-  public:
+public:
     virtual ~DataStructure() = default;
 
     virtual size_t getAnimationStepCount() const = 0;
@@ -18,6 +18,10 @@ class DataStructure {
 
     virtual int64_t executeRequest(const RequestScheme *requestScheme,
                                    const int64_t *firstValue) = 0;
+
+    virtual size_t getAnimationDelay() const {
+        return 1000;
+    }
 };
 
 std::unique_ptr<DataStructure> MakeSegmentTree(const int64_t *first,
