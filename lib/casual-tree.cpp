@@ -70,14 +70,14 @@ class CasualBinaryTree : public DataStructure {
         std::vector<int> color(conf.size(), 0);
 
         id_to_conf_pos[-1] = -1;
-        for (int i = 0; i < conf.size(); i++) {
+        for (size_t i = 0; i < conf.size(); i++) {
             // TO-DO: understandable errors
             assert(id_to_conf_pos.count(conf[i].node_id) == 0);
             id_to_conf_pos[conf[i].node_id] = i;
         }
 
         std::vector<int> order;
-        for (int i = 0; i < conf.size(); i++) {
+        for (size_t i = 0; i < conf.size(); i++) {
             if (color[i] == 0) {
                 topsort(i, -1, conf, id_to_conf_pos, color, order);
             }
@@ -93,7 +93,7 @@ class CasualBinaryTree : public DataStructure {
                 (Rch == -1 ? nullptr : std::move(ptrs[id_to_conf_pos[Rch]])));
         }
 
-        for (int i = 0; i < conf.size(); i++) {
+        for (size_t i = 0; i < conf.size(); i++) {
             if (ptrs[i]) {
                 assert(root == nullptr);
                 root = ptrs[i].release();
@@ -118,11 +118,14 @@ class CasualBinaryTree : public DataStructure {
     size_t getRequestSchemeCount() const override { return 0; }
 
     const RequestScheme *getRequestScheme(size_t idx) const override {
+        static_cast<void>(idx);
         return nullptr;
     }
 
     int64_t executeRequest(const RequestScheme *requestScheme,
                            const int64_t *firstValue) override {
+        static_cast<void>(requestScheme);
+        static_cast<void>(firstValue);
         return 0;
     }
 };

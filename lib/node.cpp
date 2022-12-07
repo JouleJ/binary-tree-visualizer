@@ -15,8 +15,8 @@ class NodeImpl : public INode {
   public:
     NodeImpl(QString _content, std::unique_ptr<INode> _left,
              std::unique_ptr<INode> _right, std::any meta)
-        : content(std::move(_content)), left(std::move(_left)),
-          right(std::move(_right)), meta(meta) {}
+        : content(std::move(_content)), meta(meta), left(std::move(_left)),
+          right(std::move(_right)) {}
 
     QString getContent() const override { return content; }
 

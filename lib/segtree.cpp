@@ -129,6 +129,8 @@ class SegmentTree : public DataStructure {
     UpdateRequestScheme updateRequestScheme;
     GetSumRequestScheme getSumRequestScheme;
 
+    std::unique_ptr<INode> root;
+
     size_t getMid(size_t left_bound, size_t right_bound) const {
         return left_bound + (right_bound - left_bound) / 2;
     }
@@ -225,9 +227,12 @@ class SegmentTree : public DataStructure {
         }
 
         build(0, 0, count - 1, first);
+        root = visualize(0, 0, count - 1);
     }
 
-    INode *getRoot() const override { return visualize(0, 0, count - 1).get(); }
+    INode *getRoot() const override { 
+        return root.get();
+    }
 
     size_t getRequestSchemeCount() const override { return 2; }
 
@@ -248,13 +253,16 @@ class SegmentTree : public DataStructure {
             const size_t position = static_cast<size_t>(firstValue[0]);
             const int64_t newValue = firstValue[1];
             update(0, 0, count - 1, position, newValue);
+            root = visualize(0, 0, count - 1);
             return 0;
         }
 
         if (requestScheme == &getSumRequestScheme) {
             const size_t leftBound = static_cast<size_t>(firstValue[0]);
             const size_t rightBound = static_cast<size_t>(firstValue[1]);
-            return getSum(0, 0, count - 1, leftBound, rightBound);
+            const auto result = getSum(0, 0, count - 1, leftBound, rightBound);
+            root = visualize(0, 0, count - 1);
+            return result;
         }
 
         throw std::runtime_error(
