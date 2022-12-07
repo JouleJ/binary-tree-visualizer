@@ -70,6 +70,10 @@ class DataStructureViewer : public QWidget {
     std::vector<QLineF> edges;
     qreal width, height;
 
+    size_t animationStep = 0;
+
+    size_t getAnimationDelayMsec() const;
+
   public:
     explicit DataStructureViewer(QWidget *parent,
                                  const lib::DataStructure *_dataStructure);
@@ -86,6 +90,10 @@ class DataStructureViewer : public QWidget {
 
   public slots:
     void onRequestExecuted();
+    void onAnimationStep();
+
+  signals:
+    void widgetCreated();
 
   protected:
     void paintEvent(QPaintEvent *event) override;

@@ -6,8 +6,9 @@ int main() {
     const int64_t array[] = {1, 2, 3, 4};
     const size_t array_size = sizeof(array) / sizeof(array[0]);
 
-    auto segtree = lib::MakeSegmentTree(&array[0], array_size);
-    auto root = segtree->getRoot();
+    const auto segtree = lib::MakeSegmentTree(&array[0], array_size);
+    const auto lastAnimationStep = segtree->getAnimationStepCount() - 1;
+    const auto root = segtree->getRoot(lastAnimationStep);
 
     assert(root->getContent() == "10");
     assert(root->getLeftChild()->getContent() == "3");

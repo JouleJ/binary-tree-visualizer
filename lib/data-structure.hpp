@@ -10,7 +10,8 @@ class DataStructure {
   public:
     virtual ~DataStructure() = default;
 
-    virtual INode *getRoot() const = 0;
+    virtual size_t getAnimationStepCount() const = 0;
+    virtual INode *getRoot(size_t animationStep) const = 0;
 
     virtual size_t getRequestSchemeCount() const = 0;
     virtual const RequestScheme *getRequestScheme(size_t idx) const = 0;

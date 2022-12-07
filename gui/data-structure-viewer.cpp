@@ -1,6 +1,7 @@
 #include "gui/data-structure-viewer.hpp"
 
 #include <QPainter>
+#include <QTimer>
 
 #include <algorithm>
 
@@ -21,15 +22,19 @@ DataStructureViewer::DataStructureViewer(
     QWidget *parent, const lib::DataStructure *_dataStructure)
     : QWidget(parent), dataStructure(_dataStructure) {
     refreshNodes();
+    QObject::connect(this, &DataStructureViewer::widgetCreated, this,
+                     &DataStructureViewer::onRequestExecuted);
+    emit widgetCreated();
 }
 
 void DataStructureViewer::refreshNodes() {
     rows.clear();
+    edges.clear();
     width = 0.;
     height = 0.;
     currentLeafX = getHorGap();
 
-    const auto root = dataStructure->getRoot();
+    const auto root = dataStructure->getRoot(animationStep);
     recurseTree(root, 0);
 
     width = currentLeafX;
@@ -108,9 +113,29 @@ void DataStructureViewer::paintEvent(QPaintEvent *event) {
             node.paintNode(painter);
         }
     }
+
+    const size_t animationStepCount = dataStructure->getAnimationStepCount();
+    std::cout << "animation: " << animationStep << "/" << animationStepCount
+              << "\n";
+    if (animationStep + 1 < animationStepCount) {
+        ++animationStep;
+    }
+}
+
+size_t DataStructureViewer::getAnimationDelayMsec() const { return 2500; }
+
+void DataStructureViewer::onAnimationStep() {
+    update();
+    resize(minimumSizeHint());
 }
 
 void DataStructureViewer::onRequestExecuted() {
-    update();
-    resize(minimumSizeHint());
+    animationStep = 0;
+    const size_t animationStepCount = dataStructure->getAnimationStepCount();
+    const size_t delay = getAnimationDelayMsec();
+
+    for (size_t step_id = 0; step_id < animationStepCount; ++step_id) {
+        QTimer::singleShot(delay * (step_id + 1), this,
+                           &DataStructureViewer::onAnimationStep);
+    }
 }

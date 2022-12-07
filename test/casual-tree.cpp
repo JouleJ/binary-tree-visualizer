@@ -4,13 +4,16 @@
 #include <vector>
 
 int main() {
-    auto tree =
+    const auto tree =
         lib::MakeBinaryTree({{1, 2, 3}, {2, -1, 4}, {3, -1, -1}, {4, -1, -1}});
-    assert(tree->getRoot()->getContent() == QString::number(1));
-    assert(tree->getRoot()->getLeftChild()->getContent() == QString::number(2));
-    assert(tree->getRoot()->getRightChild()->getContent() ==
-           QString::number(3));
-    assert(tree->getRoot()->getLeftChild()->getRightChild()->getContent() ==
+
+    const auto lastAnimationStep = tree->getAnimationStepCount() - 1;
+    const auto root = tree->getRoot(lastAnimationStep);
+
+    assert(root->getContent() == QString::number(1));
+    assert(root->getLeftChild()->getContent() == QString::number(2));
+    assert(root->getRightChild()->getContent() == QString::number(3));
+    assert(root->getLeftChild()->getRightChild()->getContent() ==
            QString::number(4));
 
     return 0;

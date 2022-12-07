@@ -113,7 +113,12 @@ class CasualBinaryTree : public DataStructure {
         *this = CasualBinaryTree(conf);
     }
 
-    INode *getRoot() const override { return root; }
+    size_t getAnimationStepCount() const override { return 1; }
+
+    INode *getRoot(size_t animationStep) const override {
+        assert(animationStep == 0);
+        return root;
+    }
 
     size_t getRequestSchemeCount() const override { return 0; }
 

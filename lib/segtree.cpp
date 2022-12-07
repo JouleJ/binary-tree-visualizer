@@ -2,6 +2,8 @@
 
 #include <any>
 #include <cassert>
+#include <iostream> // For debug purposes
+#include <set>
 #include <stdexcept>
 #include <vector>
 
@@ -125,11 +127,38 @@ class GetSumRequestScheme : public RequestScheme {
 class SegmentTree : public DataStructure {
     size_t count;
     std::vector<int64_t> vertices;
+    std::set<size_t> initializedVertices;
 
     UpdateRequestScheme updateRequestScheme;
     GetSumRequestScheme getSumRequestScheme;
 
-    std::unique_ptr<INode> root;
+    std::vector<std::unique_ptr<INode>> animatedRoot;
+
+    std::unique_ptr<INode> visualize(size_t vertex_id, size_t left_bound,
+                                     size_t right_bound) const {
+        if (vertex_id >= vertices.size()) {
+            return nullptr;
+        }
+
+        QString content;
+        if (initializedVertices.count(vertex_id) > 0) {
+            content = QString::number(vertices[vertex_id]);
+        } else {
+            content = "None";
+        }
+
+        if (left_bound == right_bound) {
+            return MakeLeaf(std::move(content),
+                            std::make_any<size_t>(left_bound));
+        }
+
+        const size_t mid = getMid(left_bound, right_bound);
+        auto leftNode = visualize(2 * vertex_id + 1, left_bound, mid);
+        auto rightNode = visualize(2 * vertex_id + 2, mid + 1, right_bound);
+
+        return MakeNode(std::move(content), std::move(leftNode),
+                        std::move(rightNode));
+    }
 
     size_t getMid(size_t left_bound, size_t right_bound) const {
         return left_bound + (right_bound - left_bound) / 2;
@@ -138,11 +167,13 @@ class SegmentTree : public DataStructure {
     void build(size_t vertex_id, size_t left_bound, size_t right_bound,
                const int64_t *values) {
         if (vertex_id >= vertices.size()) {
-            vertices.resize(vertex_id + 1);
+            vertices.resize(vertex_id + 1, -1);
         }
 
         if (left_bound == right_bound) {
             vertices[vertex_id] = values[left_bound];
+            initializedVertices.insert(vertex_id);
+            animatedRoot.push_back(visualize(0, 0, count - 1));
             return;
         }
 
@@ -152,12 +183,16 @@ class SegmentTree : public DataStructure {
         build(2 * vertex_id + 2, mid + 1, right_bound, values);
         vertices[vertex_id] =
             vertices[2 * vertex_id + 1] + vertices[2 * vertex_id + 2];
+
+        initializedVertices.insert(vertex_id);
+        animatedRoot.push_back(visualize(0, 0, count - 1));
     }
 
     void update(size_t vertex_id, size_t left_bound, size_t right_bound,
                 size_t position, int64_t new_value) {
         if (left_bound == right_bound) {
             vertices[vertex_id] = new_value;
+            animatedRoot.push_back(visualize(0, 0, count - 1));
             return;
         }
 
@@ -171,6 +206,8 @@ class SegmentTree : public DataStructure {
 
         vertices[vertex_id] =
             vertices[2 * vertex_id + 1] + vertices[2 * vertex_id + 2];
+
+        animatedRoot.push_back(visualize(0, 0, count - 1));
     }
 
     int64_t getSum(size_t vertex_id, size_t left_bound, size_t right_bound,
@@ -199,23 +236,6 @@ class SegmentTree : public DataStructure {
                       req_right_bound);
     }
 
-    std::unique_ptr<INode> visualize(size_t vertex_id, size_t left_bound,
-                                     size_t right_bound) const {
-        QString content = QString::number(vertices[vertex_id]);
-
-        if (left_bound == right_bound) {
-            return MakeLeaf(std::move(content),
-                            std::make_any<size_t>(left_bound));
-        }
-
-        const size_t mid = getMid(left_bound, right_bound);
-        auto leftNode = visualize(2 * vertex_id + 1, left_bound, mid);
-        auto rightNode = visualize(2 * vertex_id + 2, mid + 1, right_bound);
-
-        return MakeNode(std::move(content), std::move(leftNode),
-                        std::move(rightNode));
-    }
-
   public:
     SegmentTree(const int64_t *first, size_t _count)
         : count(_count), updateRequestScheme(_count),
@@ -227,11 +247,14 @@ class SegmentTree : public DataStructure {
         }
 
         build(0, 0, count - 1, first);
-        root = visualize(0, 0, count - 1);
     }
 
-    INode *getRoot() const override { 
-        return root.get();
+    size_t getAnimationStepCount() const override {
+        return animatedRoot.size();
+    }
+
+    INode *getRoot(size_t animationStep) const override {
+        return animatedRoot.at(animationStep).get();
     }
 
     size_t getRequestSchemeCount() const override { return 2; }
@@ -252,17 +275,15 @@ class SegmentTree : public DataStructure {
         if (requestScheme == &updateRequestScheme) {
             const size_t position = static_cast<size_t>(firstValue[0]);
             const int64_t newValue = firstValue[1];
+            animatedRoot.clear();
             update(0, 0, count - 1, position, newValue);
-            root = visualize(0, 0, count - 1);
             return 0;
         }
 
         if (requestScheme == &getSumRequestScheme) {
             const size_t leftBound = static_cast<size_t>(firstValue[0]);
             const size_t rightBound = static_cast<size_t>(firstValue[1]);
-            const auto result = getSum(0, 0, count - 1, leftBound, rightBound);
-            root = visualize(0, 0, count - 1);
-            return result;
+            return getSum(0, 0, count - 1, leftBound, rightBound);
         }
 
         throw std::runtime_error(
