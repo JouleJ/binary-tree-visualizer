@@ -1,5 +1,4 @@
-#include "gui/data-structure-viewer.hpp"
-#include "gui/request-form.hpp"
+#include "gui/merged-data-structure-widget.hpp"
 
 #include <QApplication>
 
@@ -9,12 +8,8 @@ int main(int argc, char **argv) {
         lib::MakeSegmentTree(&array[0], sizeof(array) / sizeof(array[0]));
 
     const auto app = QApplication(argc, argv);
-    auto widget1 = DataStructureViewer(nullptr, segtree.get());
-    auto widget2 = Requester(nullptr, segtree.get());
-    QObject::connect(&widget2, &Requester::requestExecuted, &widget1,
-                     &DataStructureViewer::onRequestExecuted);
-
-    widget1.show();
-    widget2.show();
+    auto widget = MergedDataStructureWidget(nullptr);
+    widget.show();
+    widget.acceptDataStructure(std::move(segtree));
     return app.exec();
 }

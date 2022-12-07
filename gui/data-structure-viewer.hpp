@@ -94,6 +94,7 @@ class DataStructureViewer : public QWidget {
 
   signals:
     void widgetCreated();
+    void animationStepSignal();
 
   protected:
     void paintEvent(QPaintEvent *event) override;

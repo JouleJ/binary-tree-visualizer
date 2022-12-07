@@ -37,7 +37,6 @@ void DataStructureViewer::refreshNodes() {
     const auto root = dataStructure->getRoot(animationStep);
     recurseTree(root, 0);
 
-    width = currentLeafX;
     height = getRowHeight(rows.size());
 }
 
@@ -72,6 +71,7 @@ qreal DataStructureViewer::recurseTree(const lib::INode *node, size_t row_id) {
         curX = (xl + xr) / non_zero_cnt;
     }
     out_node.x = curX;
+    width = std::max<qreal>(width, out_node.x + out_node.width);
 
     // this will break if node.width and node.height
     // is different for nodes in the same tree
@@ -94,7 +94,7 @@ qreal DataStructureViewer::recurseTree(const lib::INode *node, size_t row_id) {
 }
 
 QSize DataStructureViewer::minimumSizeHint() const {
-    return QSize(static_cast<int>(width), static_cast<int>(height));
+    return QSize(static_cast<int>(width + 1.), static_cast<int>(height + 1.));
 }
 
 QSize DataStructureViewer::sizeHint() const { return minimumSizeHint(); }
@@ -104,6 +104,7 @@ void DataStructureViewer::paintEvent(QPaintEvent *event) {
 
     refreshNodes();
     QPainter painter(this);
+    painter.drawRect(QRectF(0., 0., width, height));
     for (const auto &edge : edges) {
         painter.drawLine(edge);
     }
@@ -113,6 +114,13 @@ void DataStructureViewer::paintEvent(QPaintEvent *event) {
             node.paintNode(painter);
         }
     }
+}
+
+size_t DataStructureViewer::getAnimationDelayMsec() const { return 2500; }
+
+void DataStructureViewer::onAnimationStep() {
+    refreshNodes();
+    resize(minimumSizeHint());
 
     const size_t animationStepCount = dataStructure->getAnimationStepCount();
     std::cout << "animation: " << animationStep << "/" << animationStepCount
@@ -120,13 +128,8 @@ void DataStructureViewer::paintEvent(QPaintEvent *event) {
     if (animationStep + 1 < animationStepCount) {
         ++animationStep;
     }
-}
 
-size_t DataStructureViewer::getAnimationDelayMsec() const { return 2500; }
-
-void DataStructureViewer::onAnimationStep() {
-    update();
-    resize(minimumSizeHint());
+    emit animationStepSignal();
 }
 
 void DataStructureViewer::onRequestExecuted() {
