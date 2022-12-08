@@ -5,14 +5,21 @@
 
 #include <algorithm>
 
-// TODO: calculate this based on widget size
-qreal DataStructureViewer::getNodeWidth() const { return 64; }
+qreal DataStructureViewer::getNodeWidth() const {
+    return 4 * dataStructure->getSizeUnit();
+}
 
-qreal DataStructureViewer::getNodeHeight() const { return 64; }
+qreal DataStructureViewer::getNodeHeight() const {
+    return 4 * dataStructure->getSizeUnit();
+}
 
-qreal DataStructureViewer::getVertGap() const { return 16; }
+qreal DataStructureViewer::getVertGap() const {
+    return 1 * dataStructure->getSizeUnit();
+}
 
-qreal DataStructureViewer::getHorGap() const { return 32; }
+qreal DataStructureViewer::getHorGap() const {
+    return 2 * dataStructure->getSizeUnit();
+}
 
 qreal DataStructureViewer::getRowHeight(size_t row_id) const {
     return row_id * getNodeHeight() + (row_id + 1) * getVertGap();

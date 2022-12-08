@@ -74,8 +74,6 @@ class DataStructureViewer : public QWidget {
 
     size_t getAnimationDelayMsec() const;
 
-    qreal getSizeUnit() const;
-
   public:
     explicit DataStructureViewer(QWidget *parent,
                                  const lib::DataStructure *_dataStructure);

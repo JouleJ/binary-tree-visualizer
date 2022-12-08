@@ -26,6 +26,10 @@ class RequestScheme {
     virtual bool doesReturn() const = 0;
 };
 
+bool validateRequest(const RequestScheme *requestScheme, const int64_t *values,
+                     size_t valueCount);
+
+// Common RequestSchemes
 class AnimationDelayRequestScheme : public RequestScheme {
     class AnimationDelayArgumentScheme : public lib::ArgumentScheme {
       public:
@@ -63,6 +67,41 @@ class AnimationDelayRequestScheme : public RequestScheme {
     bool doesReturn() const override { return false; }
 };
 
-bool validateRequest(const RequestScheme *requestScheme, const int64_t *values,
-                     size_t valueCount);
+class SizeUnitRequestScheme : public RequestScheme {
+    class SizeUnitArgumentScheme : public lib::ArgumentScheme {
+      public:
+        explicit SizeUnitArgumentScheme() = default;
+
+        QString getName() const override { return "Размер юнита:"; }
+
+        bool validateValue(int64_t value) const override { return value > 0; }
+    };
+
+    SizeUnitArgumentScheme arg;
+
+  public:
+    explicit SizeUnitRequestScheme() = default;
+
+    QString getName() const override { return "Выбрать размер юнита"; }
+
+    bool postValidateValues(const int64_t *values) const override {
+        static_cast<void>(values);
+        return true;
+    }
+
+    size_t getArgumentCount() const override { return 1; }
+
+    const ArgumentScheme *getArgumentScheme(size_t idx) const override {
+        switch (idx) {
+        case 0:
+            return &arg;
+        default:
+            throw std::runtime_error(
+                "AnimationDelayRequestScheme::getArgumentScheme: idx > 0");
+        }
+    }
+
+    bool doesReturn() const override { return false; }
+};
+
 } // namespace lib

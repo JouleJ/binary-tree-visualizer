@@ -1,5 +1,6 @@
 #pragma once
 
+#include "lib/common.hpp"
 #include "lib/node.hpp"
 #include "lib/request.hpp"
 
@@ -19,7 +20,11 @@ class DataStructure {
     virtual int64_t executeRequest(const RequestScheme *requestScheme,
                                    const int64_t *firstValue) = 0;
 
-    virtual size_t getAnimationDelay() const { return 1000; }
+    virtual size_t getAnimationDelay() const {
+        return common::defaultAnimationDelay;
+    }
+
+    virtual size_t getSizeUnit() const { return common::defaultSizeUnit; }
 };
 
 std::unique_ptr<DataStructure> MakeSegmentTree(const int64_t *first,
