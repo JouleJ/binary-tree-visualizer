@@ -17,7 +17,7 @@ class MainWindow : public QMainWindow {
 
     MergedDataStructureWidget *mergedDataStructureWidget = nullptr;
 
-    std::vector<QWidget*> dialogWidgets;
+    std::vector<QWidget *> dialogWidgets;
 
   private slots:
     void askUserForSegTreeArray();

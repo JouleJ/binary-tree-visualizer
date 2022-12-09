@@ -3,15 +3,19 @@
 MainWindow::MainWindow() {
     mergedDataStructureWidget = new MergedDataStructureWidget(this);
     createDataStructureMenu = menuBar()->addMenu("Создать структуру данных");
-    createSegmentTreeAction = createDataStructureMenu->addAction("Создать дерево отрезков");
+    createSegmentTreeAction =
+        createDataStructureMenu->addAction("Создать дерево отрезков");
 
-    QObject::connect(createSegmentTreeAction, &QAction::triggered, this, &MainWindow::askUserForSegTreeArray);
+    QObject::connect(createSegmentTreeAction, &QAction::triggered, this,
+                     &MainWindow::askUserForSegTreeArray);
 }
 
 void MainWindow::askUserForSegTreeArray() {
     IntArrayEdit *intArrayEdit = new IntArrayEdit(nullptr);
-    QObject::connect(intArrayEdit, &IntArrayEdit::userFinished, this, &MainWindow::onUserPromptedSegTreeArray);
-    QObject::connect(intArrayEdit, &IntArrayEdit::userFinished, this, &MainWindow::closeDialogWidgets);
+    QObject::connect(intArrayEdit, &IntArrayEdit::userFinished, this,
+                     &MainWindow::onUserPromptedSegTreeArray);
+    QObject::connect(intArrayEdit, &IntArrayEdit::userFinished, this,
+                     &MainWindow::closeDialogWidgets);
 
     dialogWidgets.push_back(intArrayEdit);
     intArrayEdit->show();
@@ -25,7 +29,7 @@ void MainWindow::onUserPromptedSegTreeArray(std::vector<int64_t> array) {
 }
 
 void MainWindow::closeDialogWidgets() {
-    for (QWidget *widget: dialogWidgets) {
+    for (QWidget *widget : dialogWidgets) {
         widget->deleteLater();
     }
 

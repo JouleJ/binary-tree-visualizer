@@ -51,17 +51,14 @@ QSize MergedDataStructureWidget::sizeHint() const {
 
     const auto viewerSize = viewer->sizeHint();
     const auto requesterSize = requester->sizeHint();
-    const auto width =
-        viewerSize.width() + requesterSize.width() + getGap();
+    const auto width = viewerSize.width() + requesterSize.width() + getGap();
     const auto height =
         std::max(viewerSize.height(), requesterSize.height()) + getGap();
 
     return QSize(width, height);
 }
 
-QSize MergedDataStructureWidget::minimumSizeHint() const {
-    return sizeHint();
-}
+QSize MergedDataStructureWidget::minimumSizeHint() const { return sizeHint(); }
 
 void MergedDataStructureWidget::onAnimationStep() {
     QWidget *parent = parentWidget();

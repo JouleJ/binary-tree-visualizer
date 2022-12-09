@@ -18,12 +18,12 @@ class IntArrayEdit : public QFrame {
 
     QLineEdit *arraySizeLineEdit = nullptr;
     QPushButton *finishButton = nullptr;
-    std::vector<QLineEdit*> arrayElementLineEdit;
+    std::vector<QLineEdit *> arrayElementLineEdit;
 
     int64_t getMaxArraySize() const;
 
   private slots:
-    void onArraySizeChanged(const QString& newText);
+    void onArraySizeChanged(const QString &newText);
     void onFinishButtonPressed();
 
   public:

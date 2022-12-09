@@ -1,6 +1,6 @@
 #include "int-array-edit.hpp"
 
-IntArrayEdit::IntArrayEdit(QWidget *parent): QFrame(parent) {
+IntArrayEdit::IntArrayEdit(QWidget *parent) : QFrame(parent) {
     outerLayout = new QVBoxLayout;
 
     arraySizeLineEdit = new QLineEdit(this);
@@ -14,13 +14,13 @@ IntArrayEdit::IntArrayEdit(QWidget *parent): QFrame(parent) {
 
     setLayout(outerLayout);
 
-    QObject::connect(arraySizeLineEdit, &QLineEdit::textChanged, this, &IntArrayEdit::onArraySizeChanged);
-    QObject::connect(finishButton, &QPushButton::clicked, this, &IntArrayEdit::onFinishButtonPressed);
+    QObject::connect(arraySizeLineEdit, &QLineEdit::textChanged, this,
+                     &IntArrayEdit::onArraySizeChanged);
+    QObject::connect(finishButton, &QPushButton::clicked, this,
+                     &IntArrayEdit::onFinishButtonPressed);
 }
 
-int64_t IntArrayEdit::getMaxArraySize() const {
-    return 16;
-}
+int64_t IntArrayEdit::getMaxArraySize() const { return 16; }
 
 void IntArrayEdit::onFinishButtonPressed() {
     bool isOk = false;
@@ -31,14 +31,14 @@ void IntArrayEdit::onFinishButtonPressed() {
     }
 }
 
-void IntArrayEdit::onArraySizeChanged(const QString& newText) {
+void IntArrayEdit::onArraySizeChanged(const QString &newText) {
     bool isNumber = false;
     int64_t number = newText.toLongLong(&isNumber);
     if (!isNumber || number > getMaxArraySize() || number < 1) {
         return;
     }
 
-    for (QLineEdit *widget: arrayElementLineEdit) {
+    for (QLineEdit *widget : arrayElementLineEdit) {
         innerLayout->removeWidget(widget);
         widget->deleteLater();
     }
