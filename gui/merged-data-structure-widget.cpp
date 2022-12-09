@@ -44,16 +44,34 @@ int MergedDataStructureWidget::getGap() const { return 35; }
 
 int MergedDataStructureWidget::getRepaintTimeout() const { return 133; }
 
-void MergedDataStructureWidget::onAnimationStep() {
-    if (hboxLayout != nullptr) {
-        const auto viewerSize = viewer->sizeHint();
-        const auto requesterSize = requester->sizeHint();
-        const auto width =
-            viewerSize.width() + requesterSize.width() + getGap();
-        const auto height =
-            std::max(viewerSize.height(), requesterSize.height()) + getGap();
-        update();
-        resize(QSize(width, height));
-        update();
+QSize MergedDataStructureWidget::sizeHint() const {
+    if (viewer == nullptr || requester == nullptr) {
+        return QSize(256, 256);
     }
+
+    const auto viewerSize = viewer->sizeHint();
+    const auto requesterSize = requester->sizeHint();
+    const auto width =
+        viewerSize.width() + requesterSize.width() + getGap();
+    const auto height =
+        std::max(viewerSize.height(), requesterSize.height()) + getGap();
+
+    return QSize(width, height);
+}
+
+QSize MergedDataStructureWidget::minimumSizeHint() const {
+    return sizeHint();
+}
+
+void MergedDataStructureWidget::onAnimationStep() {
+    QWidget *parent = parentWidget();
+    if (parent != nullptr) {
+        parent->update();
+        parent->resize(parent->sizeHint());
+        parent->update();
+    }
+
+    update();
+    resize(sizeHint());
+    update();
 }

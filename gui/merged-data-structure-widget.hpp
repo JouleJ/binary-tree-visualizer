@@ -25,6 +25,9 @@ class MergedDataStructureWidget : public QFrame {
   public:
     MergedDataStructureWidget(QWidget *parent);
 
+    QSize minimumSizeHint() const override;
+    QSize sizeHint() const override;
+
     void acceptDataStructure(std::unique_ptr<lib::DataStructure> ds);
 
   public slots:

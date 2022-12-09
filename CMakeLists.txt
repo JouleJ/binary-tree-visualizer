@@ -15,7 +15,14 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 add_library(lib lib/node.cpp lib/segtree.cpp lib/request.cpp lib/casual-tree.cpp lib/common.hpp)
 target_link_libraries(lib PUBLIC Qt::Core Qt::Gui)
 
-add_executable(binary-tree-visualizer cmd/main.cpp gui/data-structure-viewer.cpp gui/request-form.cpp gui/merged-data-structure-widget.cpp)
+add_executable(binary-tree-visualizer
+    cmd/main.cpp
+    gui/data-structure-viewer.cpp
+    gui/request-form.cpp
+    gui/merged-data-structure-widget.cpp
+    gui/int-array-edit.cpp
+    gui/main-window.cpp)
+
 target_link_libraries(binary-tree-visualizer PUBLIC Qt::Core Qt::Gui Qt::Widgets lib)
 
 add_executable(test-node test/node.cpp)

@@ -1,4 +1,4 @@
-#include "gui/merged-data-structure-widget.hpp"
+#include "gui/main-window.hpp"
 
 #include <QApplication>
 
@@ -8,8 +8,9 @@ int main(int argc, char **argv) {
         lib::MakeSegmentTree(&array[0], sizeof(array) / sizeof(array[0]));
 
     const auto app = QApplication(argc, argv);
-    auto widget = MergedDataStructureWidget(nullptr);
-    widget.show();
-    widget.acceptDataStructure(std::move(segtree));
+
+    MainWindow mw;
+    mw.show();
+
     return app.exec();
 }
