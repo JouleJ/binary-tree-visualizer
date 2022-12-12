@@ -24,8 +24,12 @@ void MainWindow::askUserForSegTreeArray() {
 void MainWindow::onUserPromptedSegTreeArray(std::vector<int64_t> array) {
     auto segtree = lib::MakeSegmentTree(array.data(), array.size());
     mergedDataStructureWidget->acceptDataStructure(std::move(segtree));
+    callbackAfterTreeChoice();
+}
 
+void MainWindow::callbackAfterTreeChoice() {
     resize(sizeHint());
+    menuBar()->clear();
 }
 
 void MainWindow::closeDialogWidgets() {

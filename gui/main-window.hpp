@@ -19,6 +19,8 @@ class MainWindow : public QMainWindow {
 
     std::vector<QWidget *> dialogWidgets;
 
+    void callbackAfterTreeChoice();
+
   private slots:
     void askUserForSegTreeArray();
     void onUserPromptedSegTreeArray(std::vector<int64_t> array);
