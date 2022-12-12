@@ -185,7 +185,6 @@ class SegmentTree : public DataStructure {
             vertices.resize(vertex_id + 1, -1);
         }
 
-        visualize(vertex_id);
         if (left_bound == right_bound) {
             vertices[vertex_id] = values[left_bound];
             initializedVertices.insert(vertex_id);
@@ -195,13 +194,11 @@ class SegmentTree : public DataStructure {
         const size_t mid = getMid(left_bound, right_bound);
 
         build(2 * vertex_id + 1, left_bound, mid, values);
-        visualize(vertex_id);
         build(2 * vertex_id + 2, mid + 1, right_bound, values);
         vertices[vertex_id] =
             vertices[2 * vertex_id + 1] + vertices[2 * vertex_id + 2];
 
         initializedVertices.insert(vertex_id);
-        visualize(vertex_id);
     }
 
     void update(size_t vertex_id, size_t left_bound, size_t right_bound,
