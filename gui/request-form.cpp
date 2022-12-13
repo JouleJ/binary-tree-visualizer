@@ -66,10 +66,18 @@ Requester::Requester(QWidget *parent, lib::DataStructure *_dataStructure)
     const size_t requestSchemeCount = dataStructure->getRequestSchemeCount();
     requestButtons.resize(requestSchemeCount, nullptr);
     requestForms.resize(requestSchemeCount, nullptr);
+
+    int maxButtonWidth = 0;
+    int maxButtonHeight = 0;
+    
     for (size_t idx = 0; idx < requestSchemeCount; ++idx) {
         const lib::RequestScheme *requestScheme =
             dataStructure->getRequestScheme(idx);
         requestButtons[idx] = new QPushButton(requestScheme->getName(), this);
+        // [TODO - @GandarfHSE]: make button width calculation less tricky
+        maxButtonWidth = std::max(maxButtonWidth, 10 * (int)requestScheme->getName().size());
+        maxButtonHeight = std::max(maxButtonHeight, requestButtons[idx]->height());
+
         requestForms[idx] = new RequestForm(this, requestScheme);
         formLayout->addRow(requestButtons[idx], requestForms[idx]);
 
@@ -78,6 +86,11 @@ Requester::Requester(QWidget *parent, lib::DataStructure *_dataStructure)
                          &RequestForm::onAdjacentButtonClicked);
         QObject::connect(requestForms[idx], &RequestForm::userRequested, this,
                          &Requester::onUserRequested);
+    }
+    
+    QSize maxButtonSize = QSize(maxButtonWidth, maxButtonHeight);
+    for (auto &b : requestButtons) {
+        b->setMinimumSize(maxButtonSize);
     }
 
     setLayout(formLayout);
