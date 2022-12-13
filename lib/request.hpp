@@ -1,5 +1,7 @@
 #pragma once
 
+#include "lib/common.hpp"
+
 #include <QString>
 
 #include <cstdint>
@@ -11,6 +13,13 @@ class ArgumentScheme {
 
     virtual QString getName() const = 0;
     virtual bool validateValue(int64_t value) const = 0;
+
+    virtual int getDefaultValue() const { return 0; }
+    virtual QString getDefaultSuffix() const { return QString(); }
+    virtual QString getDefaultPrefix() const { return QString(); }
+    virtual int getDefaultMinimum() const { return 0; }
+    virtual int getDefaultMaximum() const { return 100; }
+    virtual int getDefaultSingleStep() const { return 1; }
 };
 
 class RequestScheme {
@@ -38,6 +47,18 @@ class AnimationDelayRequestScheme : public RequestScheme {
         QString getName() const override { return "Задержка (мс)"; }
 
         bool validateValue(int64_t value) const override { return value > 0; }
+
+        int getDefaultMaximum() const override { return 9999; }
+
+        int getDefaultMinimum() const override { return 200; }
+
+        int getDefaultValue() const override {
+            return common::defaultAnimationDelay;
+        }
+
+        int getDefaultSingleStep() const override { return 100; }
+
+        QString getDefaultSuffix() const override { return QString{" ms"}; }
     };
 
     AnimationDelayArgumentScheme arg;
@@ -75,6 +96,16 @@ class SizeUnitRequestScheme : public RequestScheme {
         QString getName() const override { return "Размер юнита:"; }
 
         bool validateValue(int64_t value) const override { return value > 0; }
+
+        int getDefaultMaximum() const override { return 40; }
+
+        int getDefaultMinimum() const override { return 8; }
+
+        int getDefaultValue() const override { return common::defaultSizeUnit; }
+
+        int getDefaultSingleStep() const override { return 2; }
+
+        QString getDefaultSuffix() const override { return QString{" px"}; }
     };
 
     SizeUnitArgumentScheme arg;

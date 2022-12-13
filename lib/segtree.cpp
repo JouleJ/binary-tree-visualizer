@@ -34,6 +34,10 @@ class NewValueArgumentScheme : public ArgumentScheme {
         static_cast<void>(value);
         return true;
     }
+
+    int getDefaultMinimum() const override { return -10000; }
+
+    int getDefaultMaximum() const { return 10000; }
 };
 
 class UpdateRequestScheme : public RequestScheme {

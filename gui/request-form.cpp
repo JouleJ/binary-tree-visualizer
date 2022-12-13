@@ -10,15 +10,29 @@ RequestForm::RequestForm(QWidget *parent,
 
     const size_t argumentCount = requestScheme->getArgumentCount();
     argumentNameLabels.resize(argumentCount, nullptr);
-    argumentValueLineEdits.resize(argumentCount, nullptr);
+    argumentValueSpinBoxes.resize(argumentCount, nullptr);
     for (size_t idx = 0; idx < argumentCount; ++idx) {
         argumentNameLabels[idx] =
             new QLabel(requestScheme->getArgumentScheme(idx)->getName(), this);
-        argumentValueLineEdits[idx] = new QLineEdit(this);
-        formLayout->addRow(argumentNameLabels[idx],
-                           argumentValueLineEdits[idx]);
 
-        QObject::connect(argumentValueLineEdits[idx], &QLineEdit::textChanged,
+        argumentValueSpinBoxes[idx] = new QSpinBox(this);
+        argumentValueSpinBoxes[idx]->setMinimum(
+            requestScheme->getArgumentScheme(idx)->getDefaultMinimum());
+        argumentValueSpinBoxes[idx]->setMaximum(
+            requestScheme->getArgumentScheme(idx)->getDefaultMaximum());
+        argumentValueSpinBoxes[idx]->setSuffix(
+            requestScheme->getArgumentScheme(idx)->getDefaultSuffix());
+        argumentValueSpinBoxes[idx]->setPrefix(
+            requestScheme->getArgumentScheme(idx)->getDefaultPrefix());
+        argumentValueSpinBoxes[idx]->setValue(
+            requestScheme->getArgumentScheme(idx)->getDefaultValue());
+        argumentValueSpinBoxes[idx]->setSingleStep(
+            requestScheme->getArgumentScheme(idx)->getDefaultSingleStep());
+
+        formLayout->addRow(argumentNameLabels[idx],
+                           argumentValueSpinBoxes[idx]);
+
+        QObject::connect(argumentValueSpinBoxes[idx], &QSpinBox::textChanged,
                          this, &RequestForm::onArgumentValueChanged);
     }
 
@@ -32,7 +46,8 @@ void RequestForm::onArgumentValueChanged(const QString &_ignored) {
 
     const size_t argumentCount = requestScheme->getArgumentCount();
     for (size_t idx = 0; idx < argumentCount; ++idx) {
-        const QString userInputString = argumentValueLineEdits[idx]->text();
+        const QString userInputString =
+            argumentValueSpinBoxes[idx]->cleanText();
         bool isCorrectInteger = false;
         const int64_t userInputI64 =
             userInputString.toLongLong(&isCorrectInteger);
@@ -109,7 +124,7 @@ void Requester::onUserRequested(const lib::RequestScheme *requestScheme,
         }
         std::cout << ")\n";
 
-        const size_t requestResult =
+        const int requestResult =
             dataStructure->executeRequest(requestScheme, firstValue);
         emit requestExecuted();
 

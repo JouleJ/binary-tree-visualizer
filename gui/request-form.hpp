@@ -5,8 +5,8 @@
 #include <QFormLayout>
 #include <QFrame>
 #include <QLabel>
-#include <QLineEdit>
 #include <QPushButton>
+#include <QSpinBox>
 
 #include <vector>
 
@@ -18,7 +18,7 @@ class RequestForm : public QFrame {
     QFormLayout *formLayout;
 
     std::vector<QLabel *> argumentNameLabels;
-    std::vector<QLineEdit *> argumentValueLineEdits;
+    std::vector<QSpinBox *> argumentValueSpinBoxes;
 
     std::vector<int64_t> requestValues;
     bool isRequestValid = false;
