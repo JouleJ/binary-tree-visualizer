@@ -1,5 +1,6 @@
 #include "common.hpp"
 #include "data-structure.hpp"
+#include "node.hpp"
 
 #include <any>
 #include <cassert>

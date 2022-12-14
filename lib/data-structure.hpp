@@ -32,4 +32,6 @@ std::unique_ptr<DataStructure> MakeSegmentTree(const int64_t *first,
 
 std::unique_ptr<DataStructure>
 MakeBinaryTree(const std::vector<std::initializer_list<int>> &conf);
+
+std::unique_ptr<DataStructure> MakeBinaryHeap(const std::vector<int> &arr);
 } // namespace lib
