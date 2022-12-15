@@ -112,11 +112,11 @@ class BinaryHeap : public DataStructure {
 
     int64_t executeRequest(const RequestScheme *requestScheme,
                            const int64_t *firstValue) override {
-        if (requestScheme == &getMinRequestScheme) {
-            return heap_.at(0);
-        }
-
         animatedRoot.clear();
+
+        if (requestScheme == &getMinRequestScheme) {
+            return getMin();
+        }
 
         if (requestScheme == &insertRequestScheme) {
             int64_t value = *firstValue;
@@ -232,6 +232,11 @@ class BinaryHeap : public DataStructure {
             std::swap(heap_[par], heap_[id]);
             siftUp(par);
         }
+    }
+
+    int getMin() {
+        visualize(0);
+        return heap_.at(0);
     }
 
     // remove minimum from heap and return it.
