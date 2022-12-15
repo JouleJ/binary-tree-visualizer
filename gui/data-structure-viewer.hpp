@@ -88,13 +88,19 @@ class DataStructureViewer : public QWidget {
 
     qreal getRowHeight(size_t row_id) const;
 
+    void handleAnimation();
+
   public slots:
     void onRequestExecuted();
-    void onAnimationStep();
+    void onAnimationMustGoForward();
+    void onAnimationMustGoBackwards();
 
   signals:
     void widgetCreated();
     void animationStepSignal();
+
+    void animationStepChanged(size_t idx);
+    void animationStepCountChanged(size_t count);
 
   protected:
     void paintEvent(QPaintEvent *event) override;

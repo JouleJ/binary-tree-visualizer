@@ -4,7 +4,10 @@
 #include "gui/request-form.hpp"
 
 #include <QFrame>
+#include <QGridLayout>
 #include <QHBoxLayout>
+#include <QProgressBar>
+#include <QPushButton>
 #include <QTimer>
 
 class MergedDataStructureWidget : public QFrame {
@@ -16,11 +19,16 @@ class MergedDataStructureWidget : public QFrame {
     DataStructureViewer *viewer = nullptr;
     Requester *requester = nullptr;
 
-    QHBoxLayout *hboxLayout = nullptr;
+    QGridLayout *layout = nullptr;
+
+    QPushButton *animationForwardButton = nullptr;
+    QPushButton *animationBackwardsButton = nullptr;
+
+    QProgressBar *animationProgressBar = nullptr;
+
     QTimer *repaintTimer = nullptr;
 
     int getRepaintTimeout() const;
-    int getGap() const;
 
   public:
     MergedDataStructureWidget(QWidget *parent);

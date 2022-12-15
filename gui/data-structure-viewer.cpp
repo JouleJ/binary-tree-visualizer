@@ -28,9 +28,9 @@ qreal DataStructureViewer::getRowHeight(size_t row_id) const {
 DataStructureViewer::DataStructureViewer(
     QWidget *parent, const lib::DataStructure *_dataStructure)
     : QWidget(parent), dataStructure(_dataStructure) {
-    refreshNodes();
     QObject::connect(this, &DataStructureViewer::widgetCreated, this,
                      &DataStructureViewer::onRequestExecuted);
+    handleAnimation();
     emit widgetCreated();
 }
 
@@ -129,27 +129,33 @@ size_t DataStructureViewer::getAnimationDelayMsec() const {
     return dataStructure->getAnimationDelay();
 }
 
-void DataStructureViewer::onAnimationStep() {
+void DataStructureViewer::handleAnimation() {
     refreshNodes();
     resize(minimumSizeHint());
 
     const size_t animationStepCount = dataStructure->getAnimationStepCount();
-    std::cout << "animation: " << animationStep << "/" << animationStepCount
-              << "\n";
-    if (animationStep + 1 < animationStepCount) {
-        ++animationStep;
-    }
 
     emit animationStepSignal();
+    emit animationStepChanged(animationStep + 1);
+    emit animationStepCountChanged(animationStepCount);
+}
+
+void DataStructureViewer::onAnimationMustGoForward() {
+    const size_t animationStepCount = dataStructure->getAnimationStepCount();
+    if (animationStep + 1 < animationStepCount) {
+        ++animationStep;
+        handleAnimation();
+    }
+}
+
+void DataStructureViewer::onAnimationMustGoBackwards() {
+    if (animationStep > 0) {
+        --animationStep;
+        handleAnimation();
+    }
 }
 
 void DataStructureViewer::onRequestExecuted() {
     animationStep = 0;
-    const size_t animationStepCount = dataStructure->getAnimationStepCount();
-    const size_t delay = getAnimationDelayMsec();
-
-    for (size_t step_id = 0; step_id < animationStepCount; ++step_id) {
-        QTimer::singleShot(delay * (step_id + 1), this,
-                           &DataStructureViewer::onAnimationStep);
-    }
+    handleAnimation();
 }

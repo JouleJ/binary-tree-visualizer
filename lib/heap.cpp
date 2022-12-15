@@ -21,10 +21,13 @@ class BinaryHeap : public DataStructure {
 
     int64_t executeRequest(const RequestScheme *requestScheme,
                            const int64_t *firstValue) override {
+        static_cast<void>(requestScheme); // UNUSED
+        static_cast<void>(firstValue); // UNUSED
         return 0;
     }
 
     const RequestScheme *getRequestScheme(size_t idx) const override {
+        static_cast<void>(idx); // UNUSED
         return nullptr;
     }
 
