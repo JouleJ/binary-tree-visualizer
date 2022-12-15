@@ -29,6 +29,7 @@ class MergedDataStructureWidget : public QFrame {
     QTimer *repaintTimer = nullptr;
 
     int getRepaintTimeout() const;
+    void buildLayout();
 
   public:
     MergedDataStructureWidget(QWidget *parent);

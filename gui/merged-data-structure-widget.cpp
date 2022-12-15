@@ -9,12 +9,22 @@ MergedDataStructureWidget::MergedDataStructureWidget(QWidget *parent)
     : QFrame(parent) {
 }
 
+void MergedDataStructureWidget::buildLayout() {
+    delete layout;
+    layout = new QGridLayout(this);
+
+    layout->addWidget(requester, 0, 0, 3, 1);
+    layout->addWidget(viewer, 0, 1, 1, 2);
+    layout->addWidget(animationProgressBar, 1, 1, 1, 2);
+    layout->addWidget(animationBackwardsButton, 2, 1);
+    layout->addWidget(animationForwardButton, 2, 2);
+}
+
 void MergedDataStructureWidget::acceptDataStructure(
     std::unique_ptr<lib::DataStructure> ds) {
     qDeleteAll(children());
 
     dataStructure = std::move(ds);
-    layout = new QGridLayout(this);
 
     animationProgressBar = new QProgressBar(this);
 
@@ -35,11 +45,7 @@ void MergedDataStructureWidget::acceptDataStructure(
     QObject::connect(animationForwardButton, &QAbstractButton::clicked, viewer, &DataStructureViewer::onAnimationMustGoForward);
     QObject::connect(animationBackwardsButton, &QAbstractButton::clicked, viewer, &DataStructureViewer::onAnimationMustGoBackwards);
 
-    layout->addWidget(requester, 0, 0, 3, 1);
-    layout->addWidget(viewer, 0, 1, 1, 2);
-    layout->addWidget(animationProgressBar, 1, 1, 1, 2);
-    layout->addWidget(animationBackwardsButton, 2, 1);
-    layout->addWidget(animationForwardButton, 2, 2);
+    buildLayout();
 
     repaintTimer = new QTimer(this);
     QObject::connect(repaintTimer, &QTimer::timeout, this, &MergedDataStructureWidget::onAnimationStep);
@@ -61,6 +67,8 @@ QSize MergedDataStructureWidget::sizeHint() const {
 QSize MergedDataStructureWidget::minimumSizeHint() const { return sizeHint(); }
 
 void MergedDataStructureWidget::onAnimationStep() {
+    buildLayout();
+
     update();
     resize(sizeHint());
     update();

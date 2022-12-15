@@ -37,6 +37,9 @@ RequestForm::RequestForm(QWidget *parent,
     }
 
     setLayout(formLayout);
+
+    requestValues.resize(argumentCount, 0);
+    isRequestValid = validateRequest(requestScheme, requestValues.data(), requestValues.size());
 }
 
 void RequestForm::onArgumentValueChanged(const QString &_ignored) {

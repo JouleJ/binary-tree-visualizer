@@ -13,7 +13,9 @@ class MainWindow : public QMainWindow {
 
   private:
     QMenu *createDataStructureMenu = nullptr;
+
     QAction *createSegmentTreeAction = nullptr;
+    QAction *createHeapAction = nullptr;
 
     MergedDataStructureWidget *mergedDataStructureWidget = nullptr;
 
@@ -24,6 +26,10 @@ class MainWindow : public QMainWindow {
   private slots:
     void askUserForSegTreeArray();
     void onUserPromptedSegTreeArray(std::vector<int64_t> array);
+
+    void askUserForHeapArray();
+    void onUserPromptedHeapArray(std::vector<int64_t> array);
+
     void closeDialogWidgets();
 
   public:

@@ -5,9 +5,97 @@
 #include <algorithm>
 #include <functional>
 #include <memory>
+#include <stdexcept>
 #include <vector>
 
 namespace lib {
+
+namespace {
+
+class ValueArgumentScheme : public ArgumentScheme {
+  public:
+    explicit ValueArgumentScheme() = default;
+
+    QString getName() const override { return "Значение"; }
+
+    bool validateValue(int64_t value) const override {
+        static_cast<void>(value);
+        return true;
+    }
+
+    int getDefaultMinimum() const override { return -10000; }
+
+    int getDefaultMaximum() const override { return 10000; }
+};
+
+class InsertRequestScheme : public RequestScheme {
+    ValueArgumentScheme valueArgumentScheme;
+
+  public:
+    explicit InsertRequestScheme() = default;
+
+    QString getName() const override { return "Вставить"; }
+
+    bool postValidateValues(const int64_t *values) const override {
+        static_cast<void>(values);
+        return true;
+    }
+
+    size_t getArgumentCount() const override { return 1; }
+
+    const ArgumentScheme *getArgumentScheme(size_t idx) const override {
+        switch (idx) {
+            case 0: return &valueArgumentScheme;
+            default: throw std::runtime_error("InsertRequestScheme::getArgumentScheme: idx > 0");
+        }
+    }
+
+    bool doesReturn() const override { return false; }
+};
+
+class PopRequestScheme : public RequestScheme {
+  public:
+    explicit PopRequestScheme() = default;
+
+    QString getName() const override { return "Удалить минимум"; }
+
+    bool postValidateValues(const int64_t *values) const override {
+        static_cast<void>(values);
+        return true;
+    }
+
+    size_t getArgumentCount() const override { return 0; }
+
+    const ArgumentScheme *getArgumentScheme(size_t idx) const override {
+        static_cast<void>(idx); // UNUSED
+        throw std::runtime_error("PopRequestScheme::getArgumentScheme");
+    }
+
+    bool doesReturn() const override { return false; }
+};
+
+class GetMinRequestScheme : public RequestScheme {
+  public:
+    explicit GetMinRequestScheme() = default;
+
+    QString getName() const override { return "Найти минимум"; }
+
+    bool postValidateValues(const int64_t *values) const override {
+        static_cast<void>(values);
+        return true;
+    }
+
+    size_t getArgumentCount() const override { return 0; }
+
+    const ArgumentScheme *getArgumentScheme(size_t idx) const override {
+        static_cast<void>(idx); // UNUSED
+        throw std::runtime_error("GetMinRequestScheme::getArgumentScheme");
+    }
+
+    bool doesReturn() const override { return true; }
+};
+
+}
 
 template <typename Comparator = std::less<int>>
 class BinaryHeap : public DataStructure {
@@ -21,17 +109,36 @@ class BinaryHeap : public DataStructure {
 
     int64_t executeRequest(const RequestScheme *requestScheme,
                            const int64_t *firstValue) override {
-        static_cast<void>(requestScheme); // UNUSED
-        static_cast<void>(firstValue); // UNUSED
-        return 0;
+        if (requestScheme == &getMinRequestScheme) {
+            return heap_.at(0);
+        }
+
+        animatedRoot.clear();
+
+        if (requestScheme == &insertRequestScheme) {
+            int64_t value = *firstValue;
+            insert(value);
+            return -1;
+        }
+
+        if (requestScheme == &popRequestScheme) {
+            pop();
+            return -1;
+        }
+
+        throw std::runtime_error("BinaryHeap::executeReques: invalid requestScheme");
     }
 
     const RequestScheme *getRequestScheme(size_t idx) const override {
-        static_cast<void>(idx); // UNUSED
-        return nullptr;
+        switch (idx) {
+            case 0: return &insertRequestScheme;
+            case 1: return &popRequestScheme;
+            case 2: return &getMinRequestScheme;
+            default: throw std::runtime_error("BinaryHeap::getRequestScheme: idx > 2");
+        }
     }
 
-    size_t getRequestSchemeCount() const override { return 0; }
+    size_t getRequestSchemeCount() const override { return 3; }
 
     size_t getAnimationStepCount() const override {
         return animatedRoot.size();
@@ -49,6 +156,10 @@ class BinaryHeap : public DataStructure {
     // but in practice it could be any viable comparator
     Comparator cmp_;
     std::vector<std::unique_ptr<INode>> animatedRoot;
+
+    InsertRequestScheme insertRequestScheme;
+    PopRequestScheme popRequestScheme;
+    GetMinRequestScheme getMinRequestScheme;
 
     void visualize(size_t visualized_from = -1) {
         animatedRoot.push_back(visualizeImpl(0, visualized_from));
@@ -105,11 +216,11 @@ class BinaryHeap : public DataStructure {
     }
 
     void siftUp(size_t id) {
+        visualize(id);
         if (id == 0)
             return;
-        visualize(id);
         auto par = getParentIndex(id);
-        if (cmp_(heap_[par], heap_[id])) {
+        if (cmp_(heap_[id], heap_[par])) {
             std::swap(heap_[par], heap_[id]);
             siftUp(par);
         }

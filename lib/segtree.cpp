@@ -38,7 +38,7 @@ class NewValueArgumentScheme : public ArgumentScheme {
 
     int getDefaultMinimum() const override { return -10000; }
 
-    int getDefaultMaximum() const { return 10000; }
+    int getDefaultMaximum() const override { return 10000; }
 };
 
 class UpdateRequestScheme : public RequestScheme {
