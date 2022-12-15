@@ -57,14 +57,16 @@ class InsertRequestScheme : public RequestScheme {
 };
 
 class PopRequestScheme : public RequestScheme {
+    std::vector<int> *heap;
+
   public:
-    explicit PopRequestScheme() = default;
+    explicit PopRequestScheme(std::vector<int> *heap_) : heap(heap_) {}
 
     QString getName() const override { return "Удалить минимум"; }
 
     bool postValidateValues(const int64_t *values) const override {
         static_cast<void>(values);
-        return true;
+        return !heap->empty();
     }
 
     size_t getArgumentCount() const override { return 0; }
@@ -78,14 +80,16 @@ class PopRequestScheme : public RequestScheme {
 };
 
 class GetMinRequestScheme : public RequestScheme {
+    std::vector<int> *heap;
+
   public:
-    explicit GetMinRequestScheme() = default;
+    explicit GetMinRequestScheme(std::vector<int> *heap_) : heap(heap_) {}
 
     QString getName() const override { return "Найти минимум"; }
 
     bool postValidateValues(const int64_t *values) const override {
         static_cast<void>(values);
-        return true;
+        return !heap->empty();
     }
 
     size_t getArgumentCount() const override { return 0; }
@@ -103,7 +107,8 @@ class GetMinRequestScheme : public RequestScheme {
 template <typename Comparator = std::less<int>>
 class BinaryHeap : public DataStructure {
   public:
-    BinaryHeap(const std::vector<int> &arr, Comparator cmp = Comparator{}) {
+    BinaryHeap(const std::vector<int> &arr, Comparator cmp = Comparator{})
+        : popRequestScheme(&heap_), getMinRequestScheme(&heap_) {
         cmp_ = std::move(cmp);
         for (const auto &value : arr) {
             insert(value);

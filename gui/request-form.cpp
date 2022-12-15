@@ -1,10 +1,9 @@
 #include "gui/request-form.hpp"
 
-#include <iostream>
-
 RequestForm::RequestForm(QWidget *parent,
                          const lib::RequestScheme *_requestScheme)
-    : QFrame(parent), requestScheme(_requestScheme) {
+    : QFrame(parent), requestScheme(_requestScheme),
+      requestValues(requestScheme->getArgumentCount(), 0) {
     setFrameShape(QFrame::Box);
     formLayout = new QFormLayout;
 
@@ -37,16 +36,10 @@ RequestForm::RequestForm(QWidget *parent,
     }
 
     setLayout(formLayout);
-
-    requestValues.resize(argumentCount, 0);
-    isRequestValid = validateRequest(requestScheme, requestValues.data(),
-                                     requestValues.size());
 }
 
 void RequestForm::onArgumentValueChanged(const QString &_ignored) {
     static_cast<void>(_ignored);
-    requestValues.clear();
-    isRequestValid = false;
 
     const size_t argumentCount = requestScheme->getArgumentCount();
     for (size_t idx = 0; idx < argumentCount; ++idx) {
@@ -56,25 +49,32 @@ void RequestForm::onArgumentValueChanged(const QString &_ignored) {
         const int64_t userInputI64 =
             userInputString.toLongLong(&isCorrectInteger);
 
-        if (!isCorrectInteger) {
-            requestValues.clear();
-            return;
+        if (isCorrectInteger) {
+            requestValues[idx] = userInputI64;
+        } else {
+            requestValues[idx] = {};
         }
-
-        requestValues.push_back(userInputI64);
-    }
-
-    if (validateRequest(requestScheme, requestValues.data(),
-                        requestValues.size())) {
-        isRequestValid = true;
-    } else {
-        requestValues.clear();
     }
 }
 
 void RequestForm::onAdjacentButtonClicked() {
-    emit userRequested(requestScheme, isRequestValid, requestValues.data(),
-                       requestValues.size());
+    const size_t n = requestValues.size();
+    std::vector<int64_t> unwrapedValues;
+    unwrapedValues.reserve(n);
+
+    for (size_t i = 0; i < n; ++i) {
+        if (requestValues[i]) {
+            unwrapedValues.push_back(*requestValues[i]);
+        } else {
+            emit userRequested(requestScheme, false, nullptr, 0);
+            return;
+        }
+    }
+
+    emit userRequested(requestScheme,
+                       validateRequest(requestScheme, unwrapedValues.data(),
+                                       unwrapedValues.size()),
+                       unwrapedValues.data(), unwrapedValues.size());
 }
 
 Requester::Requester(QWidget *parent, lib::DataStructure *_dataStructure)
@@ -139,16 +139,9 @@ void Requester::onInvalidRequest() {
 void Requester::onUserRequested(const lib::RequestScheme *requestScheme,
                                 bool isRequestValid, const int64_t *firstValue,
                                 size_t valueCount) {
-    if (isRequestValid) {
-        std::cout << "Requester::onUserRequested(";
-        for (size_t idx = 0; idx < valueCount; ++idx) {
-            if (idx != 0) {
-                std::cout << ", ";
-            }
-            std::cout << firstValue[idx];
-        }
-        std::cout << ")\n";
+    static_cast<void>(valueCount); // UNUSED
 
+    if (isRequestValid) {
         const int requestResult =
             dataStructure->executeRequest(requestScheme, firstValue);
         emit requestExecuted();

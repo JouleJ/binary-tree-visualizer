@@ -9,6 +9,7 @@
 #include <QPushButton>
 #include <QSpinBox>
 
+#include <optional>
 #include <vector>
 
 class RequestForm : public QFrame {
@@ -21,8 +22,7 @@ class RequestForm : public QFrame {
     std::vector<QLabel *> argumentNameLabels;
     std::vector<QSpinBox *> argumentValueSpinBoxes;
 
-    std::vector<int64_t> requestValues;
-    bool isRequestValid = false;
+    std::vector<std::optional<int64_t>> requestValues;
 
   private slots:
     void onArgumentValueChanged(const QString &_ignored);
