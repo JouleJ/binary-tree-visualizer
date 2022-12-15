@@ -193,6 +193,7 @@ class SegmentTree : public DataStructure {
         if (left_bound == right_bound) {
             vertices[vertex_id] = values[left_bound];
             initializedVertices.insert(vertex_id);
+            visualize(vertex_id);
             return;
         }
 
@@ -204,6 +205,7 @@ class SegmentTree : public DataStructure {
             vertices[2 * vertex_id + 1] + vertices[2 * vertex_id + 2];
 
         initializedVertices.insert(vertex_id);
+        visualize(vertex_id);
     }
 
     void update(size_t vertex_id, size_t left_bound, size_t right_bound,
