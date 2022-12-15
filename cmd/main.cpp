@@ -12,15 +12,13 @@ void parse_args(int argc, char **argv) {
         std::string arg{argv[i]};
         if (arg == "-d" || arg == "--debug") {
             DEBUG = true;
-        } else
-        if (arg == "-h" || arg == "--help") {
+        } else if (arg == "-h" || arg == "--help") {
             std::cout << "Binary tree visualizer:\n"
                          "(-d | --debug): debug mode\n"
                          "(-h | --help): print this message and exit\n";
             exit(0);
         } else {
-            std::cout << "Unknown option. Print "
-                      << std::string(argv[0])
+            std::cout << "Unknown option. Print " << std::string(argv[0])
                       << " -h for help\n";
             exit(0);
         }
@@ -44,7 +42,7 @@ int main(int argc, char **argv) {
         auto widget1 = DataStructureViewer(nullptr, segtree.get());
         auto widget2 = Requester(nullptr, segtree.get());
         QObject::connect(&widget2, &Requester::requestExecuted, &widget1,
-                        &DataStructureViewer::onRequestExecuted);
+                         &DataStructureViewer::onRequestExecuted);
 
         widget1.show();
         widget2.show();

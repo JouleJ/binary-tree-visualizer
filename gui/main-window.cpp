@@ -12,7 +12,8 @@ MainWindow::MainWindow() {
     QObject::connect(createSegmentTreeAction, &QAction::triggered, this,
                      &MainWindow::askUserForSegTreeArray);
 
-    QObject::connect(createHeapAction, &QAction::triggered, this, &MainWindow::askUserForHeapArray);
+    QObject::connect(createHeapAction, &QAction::triggered, this,
+                     &MainWindow::askUserForHeapArray);
 }
 
 void MainWindow::askUserForSegTreeArray() {
@@ -34,14 +35,17 @@ void MainWindow::onUserPromptedSegTreeArray(std::vector<int64_t> array) {
 
 void MainWindow::askUserForHeapArray() {
     IntArrayEdit *intArrayEdit = new IntArrayEdit(nullptr);
-    QObject::connect(intArrayEdit, &IntArrayEdit::userFinished, this, &MainWindow::onUserPromptedHeapArray);
-    QObject::connect(intArrayEdit, &IntArrayEdit::userFinished, this, &MainWindow::closeDialogWidgets);
+    QObject::connect(intArrayEdit, &IntArrayEdit::userFinished, this,
+                     &MainWindow::onUserPromptedHeapArray);
+    QObject::connect(intArrayEdit, &IntArrayEdit::userFinished, this,
+                     &MainWindow::closeDialogWidgets);
     dialogWidgets.push_back(intArrayEdit);
     intArrayEdit->show();
 }
 
 void MainWindow::onUserPromptedHeapArray(std::vector<int64_t> array) {
-    auto heap = lib::MakeBinaryHeap(std::vector<int>(array.begin(), array.end()));
+    auto heap =
+        lib::MakeBinaryHeap(std::vector<int>(array.begin(), array.end()));
     mergedDataStructureWidget->acceptDataStructure(std::move(heap));
     callbackAfterTreeChoice();
 }

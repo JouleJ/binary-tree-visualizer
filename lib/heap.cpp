@@ -45,8 +45,11 @@ class InsertRequestScheme : public RequestScheme {
 
     const ArgumentScheme *getArgumentScheme(size_t idx) const override {
         switch (idx) {
-            case 0: return &valueArgumentScheme;
-            default: throw std::runtime_error("InsertRequestScheme::getArgumentScheme: idx > 0");
+        case 0:
+            return &valueArgumentScheme;
+        default:
+            throw std::runtime_error(
+                "InsertRequestScheme::getArgumentScheme: idx > 0");
         }
     }
 
@@ -95,7 +98,7 @@ class GetMinRequestScheme : public RequestScheme {
     bool doesReturn() const override { return true; }
 };
 
-}
+} // namespace
 
 template <typename Comparator = std::less<int>>
 class BinaryHeap : public DataStructure {
@@ -126,15 +129,20 @@ class BinaryHeap : public DataStructure {
             return -1;
         }
 
-        throw std::runtime_error("BinaryHeap::executeReques: invalid requestScheme");
+        throw std::runtime_error(
+            "BinaryHeap::executeReques: invalid requestScheme");
     }
 
     const RequestScheme *getRequestScheme(size_t idx) const override {
         switch (idx) {
-            case 0: return &insertRequestScheme;
-            case 1: return &popRequestScheme;
-            case 2: return &getMinRequestScheme;
-            default: throw std::runtime_error("BinaryHeap::getRequestScheme: idx > 2");
+        case 0:
+            return &insertRequestScheme;
+        case 1:
+            return &popRequestScheme;
+        case 2:
+            return &getMinRequestScheme;
+        default:
+            throw std::runtime_error("BinaryHeap::getRequestScheme: idx > 2");
         }
     }
 

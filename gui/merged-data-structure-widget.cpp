@@ -6,8 +6,7 @@
 #include <QSizePolicy>
 
 MergedDataStructureWidget::MergedDataStructureWidget(QWidget *parent)
-    : QFrame(parent) {
-}
+    : QFrame(parent) {}
 
 void MergedDataStructureWidget::buildLayout() {
     delete layout;
@@ -36,19 +35,24 @@ void MergedDataStructureWidget::acceptDataStructure(
     QObject::connect(viewer, &DataStructureViewer::animationStepSignal, this,
                      &MergedDataStructureWidget::onAnimationStep);
 
-    QObject::connect(viewer, &DataStructureViewer::animationStepCountChanged, animationProgressBar, &QProgressBar::setMaximum);
-    QObject::connect(viewer, &DataStructureViewer::animationStepChanged, animationProgressBar, &QProgressBar::setValue);
+    QObject::connect(viewer, &DataStructureViewer::animationStepCountChanged,
+                     animationProgressBar, &QProgressBar::setMaximum);
+    QObject::connect(viewer, &DataStructureViewer::animationStepChanged,
+                     animationProgressBar, &QProgressBar::setValue);
 
     animationForwardButton = new QPushButton(">", this);
     animationBackwardsButton = new QPushButton("<", this);
 
-    QObject::connect(animationForwardButton, &QAbstractButton::clicked, viewer, &DataStructureViewer::onAnimationMustGoForward);
-    QObject::connect(animationBackwardsButton, &QAbstractButton::clicked, viewer, &DataStructureViewer::onAnimationMustGoBackwards);
+    QObject::connect(animationForwardButton, &QAbstractButton::clicked, viewer,
+                     &DataStructureViewer::onAnimationMustGoForward);
+    QObject::connect(animationBackwardsButton, &QAbstractButton::clicked,
+                     viewer, &DataStructureViewer::onAnimationMustGoBackwards);
 
     buildLayout();
 
     repaintTimer = new QTimer(this);
-    QObject::connect(repaintTimer, &QTimer::timeout, this, &MergedDataStructureWidget::onAnimationStep);
+    QObject::connect(repaintTimer, &QTimer::timeout, this,
+                     &MergedDataStructureWidget::onAnimationStep);
     repaintTimer->start(getRepaintTimeout());
 
     viewer->handleAnimation();
