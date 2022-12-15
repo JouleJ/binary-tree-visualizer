@@ -5,6 +5,7 @@
 #include <QFormLayout>
 #include <QFrame>
 #include <QLabel>
+#include <QLabel>
 #include <QPushButton>
 #include <QSpinBox>
 
@@ -48,6 +49,12 @@ class Requester : public QFrame {
 
     std::vector<QPushButton *> requestButtons;
     std::vector<RequestForm *> requestForms;
+
+    QLabel *requestResultStaticLabel = nullptr;
+    QLabel *requestResultDynamicLabel = nullptr;
+
+    void onRequestReturnedResult(int64_t result);
+    void onInvalidRequest();
 
   private slots:
     void onUserRequested(const lib::RequestScheme *requestScheme,

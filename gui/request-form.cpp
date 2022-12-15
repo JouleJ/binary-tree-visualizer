@@ -114,7 +114,26 @@ Requester::Requester(QWidget *parent, lib::DataStructure *_dataStructure)
         b->setMinimumSize(maxButtonSize);
     }
 
+    requestResultStaticLabel = new QLabel("Результат запроса", this);
+    requestResultDynamicLabel = new QLabel("Запросов пока не было", this);
+
+    requestResultStaticLabel->setMinimumSize(maxButtonSize);
+    requestResultStaticLabel->setAlignment(Qt::AlignCenter);
+
+    requestResultDynamicLabel->setMinimumSize(maxButtonSize);
+    requestResultDynamicLabel->setAlignment(Qt::AlignCenter);
+
+    formLayout->addRow(requestResultStaticLabel, requestResultDynamicLabel);
+
     setLayout(formLayout);
+}
+
+void Requester::onRequestReturnedResult(int64_t result) {
+    requestResultDynamicLabel->setText(QString::number(result));
+}
+
+void Requester::onInvalidRequest() {
+    requestResultDynamicLabel->setText("Некорректный запрос");
 }
 
 void Requester::onUserRequested(const lib::RequestScheme *requestScheme,
@@ -135,9 +154,9 @@ void Requester::onUserRequested(const lib::RequestScheme *requestScheme,
         emit requestExecuted();
 
         if (requestScheme->doesReturn()) {
-            std::cout << "requestResult = " << requestResult << "\n";
+            onRequestReturnedResult(requestResult);
         }
     } else {
-        std::cout << "Requester::onUserRequested(<INVALID REQUEST>)\n";
+        onInvalidRequest();
     }
 }
