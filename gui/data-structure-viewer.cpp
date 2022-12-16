@@ -159,3 +159,14 @@ void DataStructureViewer::onRequestExecuted() {
     animationStep = 0;
     handleAnimation();
 }
+
+void DataStructureViewer::onAnimationMustPlay() {
+    if (animationTimer != nullptr) {
+        animationTimer = new QTimer(this);
+        QObject::connect(animationTimer, &QTimer::timeout, this,
+                         &DataStructureViewer::onAnimationMustGoForward);
+        animationTimer->start(getAnimationDelayMsec());
+    }
+}
+
+void DataStructureViewer::onAnimationMustStop() { delete animationTimer; }

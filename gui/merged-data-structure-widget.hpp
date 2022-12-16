@@ -23,6 +23,8 @@ class MergedDataStructureWidget : public QFrame {
 
     QPushButton *animationForwardButton = nullptr;
     QPushButton *animationBackwardsButton = nullptr;
+    QPushButton *animationPlayButton = nullptr;
+    QPushButton *animationStopButton = nullptr;
 
     QProgressBar *animationProgressBar = nullptr;
 

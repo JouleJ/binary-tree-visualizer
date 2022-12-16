@@ -17,6 +17,8 @@ void MergedDataStructureWidget::buildLayout() {
     layout->addWidget(animationProgressBar, 1, 1, 1, 2);
     layout->addWidget(animationBackwardsButton, 2, 1);
     layout->addWidget(animationForwardButton, 2, 2);
+    layout->addWidget(animationPlayButton, 3, 1);
+    layout->addWidget(animationStopButton, 3, 2);
 }
 
 void MergedDataStructureWidget::acceptDataStructure(
@@ -40,13 +42,19 @@ void MergedDataStructureWidget::acceptDataStructure(
     QObject::connect(viewer, &DataStructureViewer::animationStepChanged,
                      animationProgressBar, &QProgressBar::setValue);
 
-    animationForwardButton = new QPushButton(">", this);
-    animationBackwardsButton = new QPushButton("<", this);
+    animationForwardButton = new QPushButton("> Вперед", this);
+    animationBackwardsButton = new QPushButton("< Назад", this);
+    animationPlayButton = new QPushButton("[▶] Воспроизвести", this);
+    animationStopButton = new QPushButton("[⏹] Стоп", this);
 
     QObject::connect(animationForwardButton, &QAbstractButton::clicked, viewer,
                      &DataStructureViewer::onAnimationMustGoForward);
     QObject::connect(animationBackwardsButton, &QAbstractButton::clicked,
                      viewer, &DataStructureViewer::onAnimationMustGoBackwards);
+    QObject::connect(animationPlayButton, &QAbstractButton::clicked, viewer,
+                     &DataStructureViewer::onAnimationMustPlay);
+    QObject::connect(animationStopButton, &QAbstractButton::clicked, viewer,
+                     &DataStructureViewer::onAnimationMustStop);
 
     buildLayout();
 

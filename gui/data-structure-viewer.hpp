@@ -71,6 +71,7 @@ class DataStructureViewer : public QWidget {
     qreal width_, height_;
 
     size_t animationStep = 0;
+    QTimer *animationTimer = nullptr;
 
     size_t getAnimationDelayMsec() const;
 
@@ -94,6 +95,8 @@ class DataStructureViewer : public QWidget {
     void onRequestExecuted();
     void onAnimationMustGoForward();
     void onAnimationMustGoBackwards();
+    void onAnimationMustPlay();
+    void onAnimationMustStop();
 
   signals:
     void widgetCreated();
