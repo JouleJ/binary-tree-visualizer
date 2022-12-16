@@ -161,7 +161,7 @@ void DataStructureViewer::onRequestExecuted() {
 }
 
 void DataStructureViewer::onAnimationMustPlay() {
-    if (animationTimer != nullptr) {
+    if (animationTimer == nullptr) {
         animationTimer = new QTimer(this);
         QObject::connect(animationTimer, &QTimer::timeout, this,
                          &DataStructureViewer::onAnimationMustGoForward);
