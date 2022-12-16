@@ -169,4 +169,7 @@ void DataStructureViewer::onAnimationMustPlay() {
     }
 }
 
-void DataStructureViewer::onAnimationMustStop() { delete animationTimer; }
+void DataStructureViewer::onAnimationMustStop() {
+    delete animationTimer;
+    animationTimer = nullptr;
+}
